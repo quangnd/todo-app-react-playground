@@ -65,7 +65,6 @@ class Todo extends React.Component {
         <button onClick={this.props.remove}>Remove</button>
       </div>
     )
-
   }
 }
 

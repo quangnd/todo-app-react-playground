@@ -24,18 +24,24 @@ class TodoList extends React.Component {
     }))
   }
   update(id, task, isCompleted) {
-    let newArr = this.state.todoList.slice()
-    for (let i = 0; i < newArr.length; i++) {
-      if (newArr[i].id === id) {
-        newArr[i].task = task
-        newArr[i].isCompleted = isCompleted ? true : false
+    let updatedTodoList = this.state.todoList.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, task, isCompleted }
       }
-    }
-    this.setState({ todoList: newArr })
+      return todo
+    })
+    this.setState({ todoList: updatedTodoList })
   }
   render() {
     const renderToDoList = this.state.todoList.map(todo => (
-      <Todo key={todo.id} task={todo.task} id={todo.id} remove={() => this.remove(todo.id)} updateTask={this.update} isCompleted={todo.isCompleted}/>
+      <Todo
+        key={todo.id}
+        task={todo.task}
+        id={todo.id}
+        remove={() => this.remove(todo.id)}
+        updateTask={this.update}
+        isCompleted={todo.isCompleted} 
+      />
     ))
 
     return (
