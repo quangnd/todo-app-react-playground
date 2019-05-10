@@ -1,6 +1,6 @@
 import React from 'react'
 import './NewTodoForm.css'
-
+import uuid from 'uuid/v4'
 class NewTodoForm extends React.Component {
   constructor(props) {
     super(props)
@@ -16,7 +16,7 @@ class NewTodoForm extends React.Component {
   }
   handleAddNew(e) {
     e.preventDefault()
-    this.props.addNew(this.state.task)
+    this.props.addNew({ ...this.state, id: uuid(), isCompleted: false })
     this.setState({ task: '' })
   }
   render() {

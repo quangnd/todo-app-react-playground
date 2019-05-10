@@ -1,7 +1,6 @@
 import React from 'react'
 import Todo from './Todo'
 import NewTodoForm from './NewTodoForm'
-import uuid from 'uuid/v4'
 import './TodoList.css'
 
 class TodoList extends React.Component {
@@ -11,11 +10,12 @@ class TodoList extends React.Component {
     this.state = { todoList: [] }
     this.addNew = this.addNew.bind(this)
     this.update = this.update.bind(this)
+    this.remove = this.remove.bind(this)
+    this.toggleCompletion = this.toggleCompletion.bind(this)
   }
   addNew(task) {
-    let newTodo = { task, id: uuid(), isCompleted: false }
     this.setState(st => ({
-      todoList: [...st.todoList, newTodo]
+      todoList: [...st.todoList, task]
     }))
   }
   remove(id) {
@@ -23,23 +23,34 @@ class TodoList extends React.Component {
       todoList: st.todoList.filter(todo => todo.id !== id)
     }))
   }
-  update(id, task, isCompleted) {
+  update(id, task) {
     let updatedTodoList = this.state.todoList.map(todo => {
       if (todo.id === id) {
-        return { ...todo, task, isCompleted }
+        return { ...todo, task }
       }
       return todo
     })
     this.setState({ todoList: updatedTodoList })
   }
+  toggleCompletion(id) {
+    let updatedTodoList = this.state.todoList.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, isCompleted: !todo.isCompleted }
+      }
+      return todo
+    })
+    this.setState({ todoList: updatedTodoList })
+  }
+
   render() {
     const renderToDoList = this.state.todoList.map(todo => (
       <Todo
         key={todo.id}
         task={todo.task}
         id={todo.id}
-        remove={() => this.remove(todo.id)}
-        updateTask={this.update}
+        removeTodo={this.remove}
+        updateTodo={this.update}
+        toggleTodo={this.toggleCompletion}
         isCompleted={todo.isCompleted} 
       />
     ))

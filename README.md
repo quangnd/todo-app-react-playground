@@ -15,7 +15,7 @@
 const task = 'xxx', isCompleted = true
 let updatedTodoList = this.state.todoList.map(todo => {
   if (todo.id === id) {
-    return { ...todo, task, isCompleted }
+    return { ...todo, task }
   }
   return todo
 })

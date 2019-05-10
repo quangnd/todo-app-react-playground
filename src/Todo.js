@@ -7,16 +7,15 @@ class Todo extends React.Component {
 
     this.state = {
       editingTask: '',
-      id: '',
-      isEditing: false,
-      isCompleted: false
+      isEditing: false
     }
 
     this.editTask = this.editTask.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.showEditForm = this.showEditForm.bind(this)
-    this.handleUpdateTask = this.handleUpdateTask.bind(this)
-    this.markCompleted = this.markCompleted.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
   }
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value })
@@ -32,19 +31,23 @@ class Todo extends React.Component {
       isEditing: false
     }))
 
-    this.handleUpdateTask(this.state.id, this.state.editingTask, this.state.isCompleted)
+    this.handleUpdate(this.props.id, this.state.editingTask)
   }
-  handleUpdateTask(id, editingTask, isCompleted) {
-    this.props.updateTask(id, editingTask, isCompleted)
+  handleUpdate(id, editingTask) {
+    this.props.updateTodo(id, editingTask)
   }
-  markCompleted() {
-    this.setState({ isCompleted: !this.props.isCompleted })
-    this.handleUpdateTask(this.props.id, this.props.task, !this.props.isCompleted)
+  handleToggle() {
+    this.props.toggleTodo(this.props.id, this.props.task)
   }
+  handleRemove() {
+    this.props.removeTodo(this.props.id)
+  }
+
   render() {
-    const isEditing = this.state.isEditing
-    if (isEditing) {
-      return (
+    let result;
+
+    if (this.state.isEditing) {
+      result = (
         <form onSubmit={this.editTask}>
           <input type='text' name='editingTask' id='editingTask'
             value={this.state.editingTask}
@@ -52,19 +55,21 @@ class Todo extends React.Component {
           <button>Save</button>
         </form>
       )
+    } else {
+      result = (
+        <div className='Todo'>
+          <span
+            onClick={this.handleToggle}
+            className={this.props.isCompleted ? 'Todo-mark-completed' : ''}
+          >
+            {this.props.task}
+          </span>
+          <button onClick={this.showEditForm}>Edit</button>
+          <button onClick={this.handleRemove}>Remove</button>
+        </div>
+      )
     }
-    return (
-      <div className='Todo'>
-        <span
-          onClick={this.markCompleted}
-          className={this.state.isCompleted ? 'Todo-mark-completed' : ''}
-        >
-          {this.props.task}
-        </span>
-        <button onClick={this.showEditForm}>Edit</button>
-        <button onClick={this.props.remove}>Remove</button>
-      </div>
-    )
+    return result
   }
 }
 
